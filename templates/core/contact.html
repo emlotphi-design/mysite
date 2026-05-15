@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Kontakt - PädZ{% endblock %}
+
+{% block content %}
+<section class="section" style="background-color: transparent;">
+    <h1 class="section-title">Kontakt aufnehmen</h1>
+    
+    <div style="display: flex; flex-wrap: wrap; gap: 2rem; max-width: 1000px; margin: 0 auto;">
+        
+        <!-- Contact Info Side -->
+        <div class="card" style="flex: 1; min-width: 300px;">
+            <h3 style="color: var(--primary-color);">Hier finden Sie uns</h3>
+            
+            <div style="margin-top: 1.5rem;">
+                <h4 style="margin-bottom: 0.5rem;">GESCHÄFTSSTELLE & ANMELDUNG</h4>
+                <p>Pädagogisches Zentrum e.V.<br>Elbinger Platz 1<br>27570 Bremerhaven</p>
+            </div>
+            
+            <div style="margin-top: 1.5rem;">
+                <h4 style="margin-bottom: 0.5rem;">Kontakt</h4>
+                <p>Telefon: 0471 300549-0<br>Telefax: 0471 300549-11<br>Email: <a href="mailto:info@paedz.de" style="color: var(--primary-color);">info@paedz.de</a></p>
+            </div>
+            
+            <div style="margin-top: 1.5rem;">
+                <h4 style="margin-bottom: 0.5rem;">Öffnungszeiten</h4>
+                <p>Montag: 08:00 – 17:00 Uhr<br>Dienstag-Donnerstag: 08:00 – 16:30 Uhr<br>Freitag: 08:00 – 15:30 Uhr</p>
+            </div>
+        </div>
+
+        <!-- Form Side -->
+        <div class="contact-form" style="flex: 2; min-width: 300px; margin: 0;">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            
+            <p style="margin-bottom: 2rem; color: var(--text-muted);">
+                Schreiben Sie uns! Wir beantworten gerne Ihre Fragen zu unseren Kursen und Projekten.
+            </p>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="text" name="name" class="form-control" placeholder="Ihr Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" class="form-control" placeholder="Ihre E-Mail-Adresse" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" name="phone" class="form-control" placeholder="Telefonnummer (optional)">
+                </div>
+                <div class="form-group">
+                    <textarea name="message" class="form-control" placeholder="Ihre Nachricht..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-liquid" style="width: 100%;">Nachricht senden</button>
+            </form>
+        </div>
+        
+    </div>
+</section>
+{% endblock %}

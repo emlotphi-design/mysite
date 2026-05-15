@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Willkommen beim größten Integrations- und Berufssprachkursträger in Bremerhaven</h1>
+        <p>Sprachen – Integration – Schülerförderung. Das Pädagogische Zentrum e.V. bietet Ihnen professionelle Kurse, Beratung und Unterstützung für Ihre Zukunft in Deutschland.</p>
+        <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+            <a href="{% url 'courses' %}" class="btn btn-liquid">Kurse entdecken</a>
+            <a href="{% url 'contact' %}" class="btn btn-outline">Kontakt aufnehmen</a>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <h2 class="section-title">Unsere <span>Schwerpunkte</span></h2>
+    <div class="grid">
+        <div class="card">
+            <h3>Deutsch lernen</h3>
+            <p>Wir bieten Integrationskurse, Berufssprachkurse und Erstorientierungskurse (EOK) für alle Niveaustufen an.</p>
+        </div>
+        <div class="card">
+            <h3>Projekte & Integration</h3>
+            <p>Innovative Maßnahmen für Kompetenz und Erfolg, Migrationsberatung und Spezialprojekte wie "Mama lernt Deutsch".</p>
+        </div>
+        <div class="card">
+            <h3>Schülerförderkreis</h3>
+            <p>Effektive Nachhilfe gegen Schulfrust, Unterstützung bei Lese-Rechtschreibschwäche und spezielle Alphaklassen.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section" style="background-color: transparent;">
+    <h2 class="section-title">Aktuelle <span>Kursangebote</span></h2>
+    <div class="grid">
+        {% for course in courses %}
+        <div class="card">
+            <span class="level-badge">{{ course.get_category_display }}</span>
+            <h3>{{ course.title }}</h3>
+            <p>{{ course.description|truncatewords:20 }}</p>
+            <div style="margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem;">
+                <strong>Dauer:</strong> {{ course.duration }}
+            </div>
+            <span class="price">{{ course.price }}</span>
+        </div>
+        {% empty %}
+        <p style="text-align: center; width: 100%; color: var(--text-muted);">Derzeit sind keine Kurse verfügbar.</p>
+        {% endfor %}
+    </div>
+    <div style="text-align: center; margin-top: 3rem;">
+        <a href="{% url 'courses' %}" class="btn btn-liquid">Alle Kurse ansehen</a>
+    </div>
+</section>
+{% endblock %}

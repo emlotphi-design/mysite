@@ -1,0 +1,650 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paedz - Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0ea5e9; /* Cyan */
+            --secondary-color: #2563eb; /* Blue */
+            --bg-dark: #0f172a; /* Slate 900 */
+            --bg-card: #1e293b; /* Slate 800 */
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+            
+            --status-pending: #f59e0b; /* Amber */
+            --status-confirmed: #10b981; /* Emerald */
+            --status-waitlisted: #6366f1; /* Indigo */
+            --status-cancelled: #ef4444; /* Red */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background-color: #020617;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        .nav-menu {
+            padding: 1.5rem 1rem;
+            flex: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: rgba(14, 165, 233, 0.1);
+            color: var(--primary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .card .value {
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+
+        .card.total .value { color: var(--primary-color); }
+        .card.pending .value { color: var(--status-pending); }
+        .card.confirmed .value { color: var(--status-confirmed); }
+
+        /* Controls Area */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            background-color: var(--bg-card);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .search-box input {
+            background-color: rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            width: 300px;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .btn-danger {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-danger:hover {
+            background-color: #ef4444;
+            color: #fff;
+        }
+
+        /* Table */
+        .table-container {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Status Select */
+        .status-select {
+            background-color: rgba(0,0,0,0.3);
+            color: #fff;
+            border: 1px solid var(--border-color);
+            padding: 0.4rem;
+            border-radius: 4px;
+            outline: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .status-select.status-Pending { color: var(--status-pending); border-color: rgba(245, 158, 11, 0.5); }
+        .status-select.status-Confirmed { color: var(--status-confirmed); border-color: rgba(16, 185, 129, 0.5); }
+        .status-select.status-Waitlisted { color: var(--status-waitlisted); border-color: rgba(99, 102, 241, 0.5); }
+        .status-select.status-Cancelled { color: var(--status-cancelled); border-color: rgba(239, 68, 68, 0.5); }
+
+        .status-select option {
+            background-color: var(--bg-dark);
+            color: #fff;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .detail-row {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.2rem;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            color: #fff;
+        }
+
+        /* Notifications Panel */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transform: translateY(150%);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); z-index: 100; }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .menu-toggle { display: block; }
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .action-btns {
+            display: flex;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="{% url 'home' %}" class="logo">Paedz<span>Admin</span></a>
+        </div>
+        <div class="nav-menu">
+            <a href="#" class="nav-item active">Dashboard Übersicht</a>
+            <a href="#" class="nav-item">Anmeldungen</a>
+            <a href="#" class="nav-item">Kurse verwalten</a>
+            <a href="#" class="nav-item">Nachrichten</a>
+            <a href="#" class="nav-item" style="margin-top: 2rem;">Einstellungen</a>
+            <a href="{% url 'home' %}" class="nav-item">Zur Website</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+                <h1>Dashboard Übersicht</h1>
+            </div>
+            <div class="user-info">
+                <span>Hallo, Admin</span>
+            </div>
+        </header>
+
+        <!-- Summary Cards -->
+        <div class="summary-cards">
+            <div class="card total">
+                <h3>Alle Anmeldungen</h3>
+                <div class="value">{{ total_registrations }}</div>
+            </div>
+            <div class="card pending">
+                <h3>Ausstehend</h3>
+                <div class="value">{{ pending_approvals }}</div>
+            </div>
+            <div class="card confirmed">
+                <h3>Bestätigt</h3>
+                <div class="value">{{ confirmed_registrations }}</div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Suche nach Name, E-Mail oder Kurs..." onkeyup="filterTable()">
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <select id="statusFilter" class="status-select" onchange="filterTable()" style="background: var(--bg-dark);">
+                    <option value="all">Alle Status</option>
+                    <option value="Pending">Ausstehend</option>
+                    <option value="Confirmed">Bestätigt</option>
+                    <option value="Waitlisted">Warteliste</option>
+                    <option value="Cancelled">Storniert</option>
+                </select>
+                <button class="btn btn-outline" onclick="exportTableToCSV('anmeldungen.csv')">Als CSV Exportieren</button>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="table-container">
+            <table id="registrationsTable">
+                <thead>
+                    <tr>
+                        <th>Datum</th>
+                        <th>Name</th>
+                        <th>Kontakt</th>
+                        <th>Kurs</th>
+                        <th>Status</th>
+                        <th>Aktionen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reg in registrations %}
+                    <tr data-status="{{ reg.status }}">
+                        <td>{{ reg.created_at|date:"d.m.Y H:i" }}</td>
+                        <td class="searchable">{{ reg.first_name }} {{ reg.last_name }}</td>
+                        <td class="searchable">{{ reg.email }}<br><small style="color: var(--text-muted)">{{ reg.phone|default:"-" }}</small></td>
+                        <td class="searchable">{{ reg.course.title }}</td>
+                        <td>
+                            <select class="status-select status-{{ reg.status }}" onchange="updateStatus({{ reg.id }}, this)">
+                                <option value="Pending" {% if reg.status == 'Pending' %}selected{% endif %}>Ausstehend</option>
+                                <option value="Confirmed" {% if reg.status == 'Confirmed' %}selected{% endif %}>Bestätigt</option>
+                                <option value="Waitlisted" {% if reg.status == 'Waitlisted' %}selected{% endif %}>Warteliste</option>
+                                <option value="Cancelled" {% if reg.status == 'Cancelled' %}selected{% endif %}>Storniert</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn btn-outline" style="padding: 0.4rem; font-size: 0.8rem;" onclick='viewDetails({{ reg.id }}, "{{ reg.first_name }}", "{{ reg.last_name }}", "{{ reg.email }}", "{{ reg.phone|default:'' }}", "{{ reg.course.title }}", "{{ reg.created_at|date:'d.m.Y H:i' }}")'>Details</button>
+                                <button class="btn btn-danger" style="padding: 0.4rem; font-size: 0.8rem;" onclick="deleteRegistration({{ reg.id }})">Löschen</button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 3rem;">
+                            Keine Anmeldungen gefunden.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Details Modal -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Anmeldedetails</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <span class="detail-label">Name</span>
+                    <span class="detail-value" id="modalName"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">E-Mail</span>
+                    <span class="detail-value" id="modalEmail"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Telefon</span>
+                    <span class="detail-value" id="modalPhone"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Gewählter Kurs</span>
+                    <span class="detail-value" id="modalCourse"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Datum</span>
+                    <span class="detail-value" id="modalDate"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification">Aktion erfolgreich</div>
+
+    <script>
+        // Update Status API Call
+        function updateStatus(id, selectElement) {
+            const newStatus = selectElement.value;
+            
+            // Update classes for color styling
+            selectElement.className = `status-select status-${newStatus}`;
+            selectElement.closest('tr').setAttribute('data-status', newStatus);
+
+            fetch(`/dashboard/api/update_registration/${id}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Status aktualisiert!');
+                } else {
+                    showNotification('Fehler beim Aktualisieren', true);
+                }
+            })
+            .catch(error => {
+                showNotification('Netzwerkfehler', true);
+            });
+        }
+
+        // Delete Registration API Call
+        function deleteRegistration(id) {
+            if(confirm('Möchten Sie diese Anmeldung wirklich löschen?')) {
+                fetch(`/dashboard/api/delete_registration/${id}/`, {
+                    method: 'DELETE',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showNotification('Anmeldung gelöscht');
+                        setTimeout(() => window.location.reload(), 1000);
+                    } else {
+                        showNotification('Fehler beim Löschen', true);
+                    }
+                });
+            }
+        }
+
+        // Search and Filter Functionality
+        function filterTable() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const rows = document.querySelectorAll('#registrationsTable tbody tr');
+
+            rows.forEach(row => {
+                if (row.children.length === 1) return; // Skip empty message row
+                
+                const searchables = Array.from(row.querySelectorAll('.searchable')).map(td => td.innerText.toLowerCase()).join(' ');
+                const status = row.getAttribute('data-status');
+                
+                const matchesSearch = searchables.includes(searchText);
+                const matchesStatus = (statusFilter === 'all') || (status === statusFilter);
+
+                if (matchesSearch && matchesStatus) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Modal Functionality
+        function viewDetails(id, firstName, lastName, email, phone, course, date) {
+            document.getElementById('modalName').innerText = `${firstName} ${lastName}`;
+            document.getElementById('modalEmail').innerText = email;
+            document.getElementById('modalPhone').innerText = phone || 'Nicht angegeben';
+            document.getElementById('modalCourse').innerText = course;
+            document.getElementById('modalDate').innerText = date;
+            
+            document.getElementById('detailsModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('detailsModal').style.display = 'none';
+        }
+
+        // Close modal on click outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailsModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Export to CSV
+        function exportTableToCSV(filename) {
+            const table = document.getElementById("registrationsTable");
+            let csv = [];
+            const rows = table.querySelectorAll("tr");
+            
+            for (let i = 0; i < rows.length; i++) {
+                let row = [], cols = rows[i].querySelectorAll("td, th");
+                // Skip empty row message
+                if (cols.length === 1 && cols[0].colSpan > 1) continue;
+                
+                for (let j = 0; j < cols.length - 1; j++) { // Skip Actions column
+                    let data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, " ");
+                    // If it's a select element, get its selected text
+                    const select = cols[j].querySelector('select');
+                    if (select) {
+                        data = select.options[select.selectedIndex].text;
+                    }
+                    row.push('"' + data + '"');
+                }
+                csv.push(row.join(","));
+            }
+
+            downloadCSV(csv.join("\n"), filename);
+        }
+
+        function downloadCSV(csv, filename) {
+            let csvFile;
+            let downloadLink;
+
+            csvFile = new Blob([csv], {type: "text/csv"});
+            downloadLink = document.createElement("a");
+            downloadLink.download = filename;
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.style.display = "none";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
+
+        // Notification
+        function showNotification(message, isError = false) {
+            const notif = document.getElementById('notification');
+            notif.innerText = message;
+            notif.style.backgroundColor = isError ? '#ef4444' : 'var(--status-confirmed)';
+            notif.classList.add('show');
+            setTimeout(() => {
+                notif.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

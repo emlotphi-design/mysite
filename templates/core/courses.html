@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Kurse & Projekte{% endblock %}
+
+{% block content %}
+<section class="section">
+    <h1 class="section-title">Unsere <span>Kurse & Projekte</span></h1>
+    <p style="text-align: center; max-width: 800px; margin: 0 auto 3rem; font-size: 1.1rem; color: var(--text-muted);">
+        Als größter Integrations- und Berufssprachkursträger in Bremerhaven bieten wir eine Vielzahl von Kursen und Projekten an, um Sie auf Ihrem Weg in Deutschland zu unterstützen.
+    </p>
+
+    <div class="grid">
+        {% for course in courses %}
+        <div class="card">
+            <span class="level-badge">{{ course.get_category_display }}</span>
+            <h3>{{ course.title }}</h3>
+            <p>{{ course.description }}</p>
+            <div style="margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem;">
+                <strong>Dauer:</strong> {{ course.duration }}
+            </div>
+            <span class="price">{{ course.price }}</span>
+            <br>
+            <a href="{% url 'contact' %}" class="btn btn-liquid" style="margin-top: 1.5rem; display: block; text-align: center; width: 100%;">Anmelden & Beraten</a>
+        </div>
+        {% empty %}
+        <p style="text-align: center; width: 100%; color: var(--text-muted);">Derzeit sind keine Kurse verfügbar.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
