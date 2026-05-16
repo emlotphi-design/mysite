@@ -1,10 +1,14 @@
 :root {
-    --primary-color: #0ea5e9; /* Cyan */
-    --secondary-color: #f59e0b; /* Amber */
-    --bg-dark: #020617; /* Very dark slate */
-    --bg-card: rgba(15, 23, 42, 0.6); /* Translucent slate */
+    --primary-color: #f72585;
+    /* Neon Pink */
+    --secondary-color: #4cc9f0;
+    /* Neon Blue */
+    --bg-dark: #0a0410;
+    /* Very dark violet */
+    --bg-card: rgba(30, 15, 50, 0.6);
+    /* Translucent violet */
     --text-color: #f8fafc;
-    --text-muted: #94a3b8;
+    --text-muted: #cbd5e1;
     --border-radius: 16px;
     --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -17,19 +21,28 @@
 
 /* Cinematic Animated Background */
 @keyframes cinematicBg {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 body {
     font-family: 'Inter', 'Roboto', sans-serif;
     line-height: 1.6;
     color: var(--text-color);
-    background: linear-gradient(-45deg, #0f172a, #020617, #1e1b4b, #0f172a);
+    background: linear-gradient(-45deg, #10002b, #0a0410, #240046, #0a0410);
     background-size: 400% 400%;
     animation: cinematicBg 20s ease infinite;
-    direction: ltr; /* Changed to LTR */
+    direction: ltr;
+    /* Changed to LTR */
     min-height: 100vh;
     overflow-x: hidden;
 }
@@ -38,16 +51,19 @@ body {
 body::before {
     content: '';
     position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: radial-gradient(circle at 20% 30%, rgba(14, 165, 233, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(245, 158, 11, 0.05) 0%, transparent 40%);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at 20% 30%, rgba(247, 37, 133, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(76, 201, 240, 0.1) 0%, transparent 40%);
     pointer-events: none;
     z-index: -1;
 }
 
 /* Header & Nav */
 header {
-    background-color: rgba(2, 6, 23, 0.8);
+    background-color: rgba(10, 4, 16, 0.8);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     position: sticky;
@@ -104,7 +120,8 @@ nav a::after {
     box-shadow: 0 0 10px var(--primary-color);
 }
 
-nav a:hover::after, nav a.active::after {
+nav a:hover::after,
+nav a.active::after {
     width: 100%;
 }
 
@@ -124,7 +141,7 @@ nav a:hover::after, nav a.active::after {
     right: 5%;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(14,165,233,0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(247, 37, 133, 0.2) 0%, transparent 70%);
     transform: translateY(-50%);
     z-index: -1;
 }
@@ -154,9 +171,17 @@ nav a:hover::after, nav a.active::after {
 
 /* Liquid Volume Buttons */
 @keyframes liquidMorph {
-    0% { border-radius: 40px 60px 60px 40px / 60px 40px 60px 40px; }
-    50% { border-radius: 60px 40px 40px 60px / 40px 60px 40px 60px; }
-    100% { border-radius: 40px 60px 60px 40px / 60px 40px 60px 40px; }
+    0% {
+        border-radius: 40px 60px 60px 40px / 60px 40px 60px 40px;
+    }
+
+    50% {
+        border-radius: 60px 40px 40px 60px / 40px 60px 40px 60px;
+    }
+
+    100% {
+        border-radius: 40px 60px 60px 40px / 60px 40px 60px 40px;
+    }
 }
 
 .btn {
@@ -177,13 +202,13 @@ nav a:hover::after, nav a.active::after {
 }
 
 .btn-liquid {
-    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    background: linear-gradient(135deg, #f72585, #7209b7);
     color: white;
     /* Volume effect using multiple shadows */
-    box-shadow: 
+    box-shadow:
         inset 2px 2px 5px rgba(255, 255, 255, 0.3),
         inset -3px -3px 7px rgba(0, 0, 0, 0.3),
-        0 10px 20px rgba(14, 165, 233, 0.4);
+        0 10px 20px rgba(247, 37, 133, 0.4);
     animation: liquidMorph 4s ease-in-out infinite;
 }
 
@@ -194,7 +219,7 @@ nav a:hover::after, nav a.active::after {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
     transform: scale(0);
     transition: transform 0.5s ease-out;
     z-index: -1;
@@ -202,10 +227,10 @@ nav a:hover::after, nav a.active::after {
 
 .btn-liquid:hover {
     transform: translateY(-5px);
-    box-shadow: 
+    box-shadow:
         inset 2px 2px 5px rgba(255, 255, 255, 0.4),
         inset -3px -3px 7px rgba(0, 0, 0, 0.2),
-        0 15px 25px rgba(14, 165, 233, 0.6);
+        0 15px 25px rgba(247, 37, 133, 0.6);
 }
 
 .btn-liquid:hover::before {
@@ -218,7 +243,8 @@ nav a:hover::after, nav a.active::after {
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 30px;
     backdrop-filter: blur(5px);
-    margin-left: 1rem; /* Changed to margin-left for LTR */
+    margin-left: 1rem;
+    /* Changed to margin-left for LTR */
 }
 
 .btn-outline:hover {
@@ -268,17 +294,19 @@ nav a:hover::after, nav a.active::after {
 .card::before {
     content: '';
     position: absolute;
-    top: 0; left: -100%;
-    width: 50%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
     transform: skewX(-20deg);
     transition: 0.5s;
 }
 
 .card:hover {
     transform: translateY(-10px) scale(1.02);
-    border-color: rgba(14, 165, 233, 0.3);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(14, 165, 233, 0.1);
+    border-color: rgba(247, 37, 133, 0.4);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(247, 37, 133, 0.2);
 }
 
 .card:hover::before {
@@ -298,13 +326,13 @@ nav a:hover::after, nav a.active::after {
 
 .level-badge {
     display: inline-block;
-    background: rgba(14, 165, 233, 0.2);
+    background: rgba(247, 37, 133, 0.2);
     color: var(--primary-color);
     padding: 0.4rem 1rem;
     border-radius: 20px;
     font-weight: 600;
     font-size: 0.85rem;
-    border: 1px solid rgba(14, 165, 233, 0.3);
+    border: 1px solid rgba(247, 37, 133, 0.4);
     margin-bottom: 1.5rem;
 }
 
@@ -351,7 +379,7 @@ nav a:hover::after, nav a.active::after {
 .form-control:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
+    box-shadow: 0 0 0 4px rgba(247, 37, 133, 0.2);
     background-color: rgba(0, 0, 0, 0.4);
 }
 
@@ -381,7 +409,7 @@ textarea.form-control {
 
 /* Footer */
 footer {
-    background-color: #020617;
+    background-color: #0a0410;
     color: var(--text-muted);
     text-align: center;
     padding: 3rem 5%;
@@ -409,6 +437,7 @@ footer {
         opacity: 0;
         transform: translateY(40px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -419,7 +448,13 @@ footer {
     .hero h1 {
         font-size: 2.8rem;
     }
+
     nav ul {
         display: none;
     }
+}
+
+body {
+    background-color: #7c3aed;
+    color: white;
 }
